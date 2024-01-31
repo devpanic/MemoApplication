@@ -22,7 +22,7 @@ public class MenuFontDesign extends JDialog {
         addFontSizePanel();
         addFontPreviewPanel();
         addFontButtonPanel();
-        setSize(540, 480);
+        setSize(560, 470);
         setVisible(true);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
@@ -48,7 +48,7 @@ public class MenuFontDesign extends JDialog {
         fontKindPanel.add(fontKindField);
         fontKindPanel.add(fontKindScroll);
 
-        fontKindPanel.setBounds(20, 20, 200, 200);
+        fontKindPanel.setBounds(20, 10, 200, 200);
         add(fontKindPanel);
     }
 
@@ -72,7 +72,7 @@ public class MenuFontDesign extends JDialog {
         fontStylePanel.add(fontStyleField);
         fontStylePanel.add(fontStyleScroll);
 
-        fontStylePanel.setBounds(240, 20, 130, 200);
+        fontStylePanel.setBounds(240, 10, 130, 200);
         add(fontStylePanel);
     }
 
@@ -97,7 +97,7 @@ public class MenuFontDesign extends JDialog {
         fontSizePanel.add(fontSizeField);
         fontSizePanel.add(fontSizeScroll);
 
-        fontSizePanel.setBounds(390, 20, 130, 200);
+        fontSizePanel.setBounds(390, 10, 130, 200);
         add(fontSizePanel);
     }
 
@@ -108,7 +108,7 @@ public class MenuFontDesign extends JDialog {
         fontPriviewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 33));
         fontPriviewLabel.setBounds(45, 20, 180, 100);
         fontPrivewPanel.add(fontPriviewLabel);
-        fontPrivewPanel.setBounds(240, 220, 280, 140);
+        fontPrivewPanel.setBounds(240, 210, 280, 140);
         fontPrivewPanel.setBorder(new TitledBorder("보기"));
         add(fontPrivewPanel);
     }
@@ -120,7 +120,7 @@ public class MenuFontDesign extends JDialog {
         JButton btnCancel = new JButton("취소");
         fontButtonPanel.add(btnOK);
         fontButtonPanel.add(btnCancel);
-        fontButtonPanel.setBounds(320, 380, 200, 40);
+        fontButtonPanel.setBounds(320, 370, 200, 40);
         add(fontButtonPanel);
     }
 }

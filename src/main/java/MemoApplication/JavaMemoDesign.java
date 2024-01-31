@@ -8,9 +8,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class JavaMemoDesign extends JFrame {
-    public JavaMemoDesign(){
+    JTextArea memoArea;
+
+    public JavaMemoDesign() {
         super("메모장");
 
+        JavaMemoEvent memoEvent = new JavaMemoEvent(this);
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("파일");
@@ -25,6 +28,13 @@ public class JavaMemoDesign extends JFrame {
         JMenuItem fontItem = new JMenuItem("글꼴");
 
         JMenuItem memoInfoItem = new JMenuItem("메모장 정보");
+
+        newMemoItem.addActionListener(memoEvent);
+        openMemoItem.addActionListener(memoEvent);
+        saveMemoItem.addActionListener(memoEvent);
+        exitMemoItem.addActionListener(memoEvent);
+        fontItem.addActionListener(memoEvent);
+        memoInfoItem.addActionListener(memoEvent);
 
         fileMenu.add(newMemoItem);
         fileMenu.addSeparator();
@@ -43,12 +53,10 @@ public class JavaMemoDesign extends JFrame {
 
         setJMenuBar(menuBar);
 
-        JTextArea memoArea = new JTextArea();
+        memoArea = new JTextArea();
         JScrollPane memoScroll = new JScrollPane(memoArea);
         add(memoScroll);
 
-        // memo JTextArea with JScrollPane
-        // add Event
         setSize(300, 300);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
