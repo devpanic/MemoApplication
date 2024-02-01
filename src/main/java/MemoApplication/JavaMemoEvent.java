@@ -37,7 +37,7 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     }
 
     public void newPost() {
-        javaMemoDesign.memoArea.setText("");
+        javaMemoDesign.getMemoArea().setText("");
     }
 
     public void openPost() {

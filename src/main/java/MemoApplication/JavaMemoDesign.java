@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class JavaMemoDesign extends JFrame {
-    JTextArea memoArea;
+    private JTextArea memoArea;
 
     public JavaMemoDesign() {
         super("메모장");
@@ -60,5 +60,9 @@ public class JavaMemoDesign extends JFrame {
         setSize(300, 300);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public JTextArea getMemoArea() {
+        return memoArea;
     }
 }
