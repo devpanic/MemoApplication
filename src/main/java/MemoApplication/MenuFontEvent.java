@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JList;
+import javax.swing.JTextField;
 
 public class MenuFontEvent extends WindowAdapter implements ActionListener, MouseListener {
     private MenuFontDesign fontDesign;
@@ -23,27 +24,16 @@ public class MenuFontEvent extends WindowAdapter implements ActionListener, Mous
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int tempInt = 0;
+        String fontInfoKind = "";
+        int fontInfoSize = 0;
+        int fontInfoStyle = 0;
 
         switch (e.getActionCommand()) {
             case "확인":
-                switch (fontDesign.getFontStyleList().getSelectedValue()) {
-                    case "일반":
-                        tempInt = Font.PLAIN;
-                        break;
-                    case "굵게":
-                        tempInt = MenuFontDesign.DEFAULT_FONT_STYLE;
-                        break;
-                    case "기울임꼴":
-                        tempInt = Font.ITALIC;
-                        break;
-                    case "굵은 기울임꼴":
-                        tempInt = MenuFontDesign.DEFAULT_FONT_STYLE | Font.ITALIC;
-                        break;
-                }
-                applyFont(fontDesign.getFontKindField().getText(), tempInt,
-                        Integer.parseInt(fontDesign.getFontSizeField().getText()));
-                break;
+                fontInfoKind = fontDesign.getKindField().getText();
+                fontInfoStyle = checkFontStyle(fontDesign.getStyleField().getText());
+                fontInfoSize = Integer.parseInt(fontDesign.getSizeField().getText());
+                applyFont(fontInfoKind, fontInfoStyle, fontInfoSize);
         }
 
         closeFontDialog();
@@ -53,36 +43,22 @@ public class MenuFontEvent extends WindowAdapter implements ActionListener, Mous
     public void mouseClicked(MouseEvent e) {
         String tempStr = "";
         int tempInt = 0;
-        JList<String> fontKindList = fontDesign.getFontKindList();
-        JList<String> fontStyleList = fontDesign.getFontStyleList();
-        JList<String> fontSizeList = fontDesign.getFontSizeList();
+        JList<String> kindList = fontDesign.getKindList();
+        JList<String> styleList = fontDesign.getStyleList();
+        JList<String> sizeList = fontDesign.getSizeList();
+        Object eventSource = e.getSource();
 
-        if (e.getSource() == fontDesign.getFontKindList()) {
-            tempStr = fontKindList.getSelectedValue();
-            fontDesign.getFontKindField().setText(tempStr);
-            setPreview(tempStr, MenuFontDesign.DEFAULT_FONT_STYLE, MenuFontDesign.DEFAULT_FONT_SIZE);
-        } else if (e.getSource() == fontDesign.getFontStyleList()) {
-            switch (fontStyleList.getSelectedValue()) {
-                case "일반":
-                    tempInt = Font.PLAIN;
-                    break;
-                case "굵게":
-                    tempInt = MenuFontDesign.DEFAULT_FONT_STYLE;
-                    break;
-                case "기울임꼴":
-                    tempInt = Font.ITALIC;
-                    break;
-                case "굵은 기울임꼴":
-                    tempInt = MenuFontDesign.DEFAULT_FONT_STYLE | Font.ITALIC;
-                    break;
-            }
-            tempStr = fontStyleList.getSelectedValue();
-            fontDesign.getFontStyleField().setText(tempStr);
-            setPreview(MenuFontDesign.DEFAULT_FONT_KIND, tempInt, MenuFontDesign.DEFAULT_FONT_SIZE);
-        } else if (e.getSource() == fontDesign.getFontSizeList()) {
-            tempStr = fontSizeList.getSelectedValue();
-            fontDesign.getFontSizeField().setText(tempStr);
-            setPreview(MenuFontDesign.DEFAULT_FONT_KIND, MenuFontDesign.DEFAULT_FONT_STYLE, Integer.parseInt(tempStr));
+        if (eventSource == kindList) {
+            applyFieldContent(fontDesign.getKindField(), kindList.getSelectedValue());
+            applyPreviewFont(tempStr, MenuFontDesign.DEFAULT_FONT_STYLE, MenuFontDesign.DEFAULT_FONT_SIZE);
+        } else if (eventSource == styleList) {
+            applyFieldContent(fontDesign.getStyleField(), styleList.getSelectedValue());
+            tempInt = checkFontStyle(styleList.getSelectedValue());
+            applyPreviewFont(MenuFontDesign.DEFAULT_FONT_KIND, tempInt, MenuFontDesign.DEFAULT_FONT_SIZE);
+        } else if (eventSource == sizeList) {
+            applyFieldContent(fontDesign.getSizeField(), sizeList.getSelectedValue());
+            applyPreviewFont(MenuFontDesign.DEFAULT_FONT_KIND, MenuFontDesign.DEFAULT_FONT_STYLE,
+                    Integer.parseInt(tempStr));
         }
     }
 
@@ -106,8 +82,25 @@ public class MenuFontEvent extends WindowAdapter implements ActionListener, Mous
 
     }
 
-    public void setPreview(String fontKind, int fontStyle, int fontSize) {
-        fontDesign.getFontPriviewLabel().setFont(new Font(fontKind, fontStyle, fontSize));
+    public int checkFontStyle(String fontStyle) {
+        switch (fontStyle) {
+            case "일반":
+                return Font.PLAIN;
+            case "굵게":
+                return MenuFontDesign.DEFAULT_FONT_STYLE;
+            case "기울임꼴":
+                return Font.ITALIC;
+            default:    // case "굵은 기울임꼴"
+                return MenuFontDesign.DEFAULT_FONT_STYLE | Font.ITALIC;
+        }
+    }
+
+    public void applyFieldContent(JTextField textField, String content) {
+        textField.setText(content);
+    }
+
+    public void applyPreviewFont(String fontKind, int fontStyle, int fontSize) {
+        fontDesign.getPreviewLabel().setFont(new Font(fontKind, fontStyle, fontSize));
     }
 
     public void applyFont(String fontKind, int fontStyle, int fontSize) {

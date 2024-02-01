@@ -42,33 +42,28 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
 
     public void openPost() {
         FileDialog fdOpen = new FileDialog(javaMemoDesign, "열기", FileDialog.LOAD);
-        StringBuilder strBuilder = new StringBuilder();
+
         fdOpen.setVisible(true);
-
-        String path = fdOpen.getDirectory();
-        String fName = fdOpen.getFile();
-
-        if (path == null) {
-            return;
-        }
-
-        strBuilder.append("열기 ").append(path).append("/").append(fName);
-        javaMemoDesign.setTitle(strBuilder.toString());
+        setFrameTitle(fdOpen, "열기");
     }
 
     public void savePost() {
         FileDialog fdOpen = new FileDialog(javaMemoDesign, "저장", FileDialog.SAVE);
-        StringBuilder strBuilder = new StringBuilder();
         fdOpen.setVisible(true);
 
+        setFrameTitle(fdOpen, "저장");
+    }
+
+    public void setFrameTitle(FileDialog fdOpen, String mode) {
+        StringBuilder strBuilder = new StringBuilder();
+
         String path = fdOpen.getDirectory();
-        String fName = fdOpen.getFile();
 
         if (path == null) {
             return;
         }
 
-        strBuilder.append("열기 ").append(path).append("/").append(fName);
+        strBuilder.append(mode).append(" ").append(path).append("/").append(fdOpen.getFile());
         javaMemoDesign.setTitle(strBuilder.toString());
     }
 

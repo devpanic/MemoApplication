@@ -1,9 +1,7 @@
 package MemoApplication;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.MenuItem;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,55 +10,44 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 public class MenuFontDesign extends JDialog {
     public static final String DEFAULT_FONT_KIND = "맑은 고딕";
+    public static final String DEFAULT_FONT_STYLE_STRING = "굵게";
     public static final int DEFAULT_FONT_STYLE = Font.BOLD;
     public static final int DEFAULT_FONT_SIZE = 33;
 
     private JavaMemoDesign parentFrame;
 
-    private JTextField fontKindField;
-    private JTextField fontStyleField;
-    private JTextField fontSizeField;
+    private JTextField kindField;
+    private JTextField styleField;
+    private JTextField sizeField;
 
-    private JList<String> fontKindList;
-    private JList<String> fontStyleList;
-    private JList<String> fontSizeList;
+    private JList<String> kindList;
+    private JList<String> styleList;
+    private JList<String> sizeList;
 
-    private DefaultListModel<String> fontKindModel;
-    private DefaultListModel<String> fontStyleModel;
-    private DefaultListModel<String> fontSizeModel;
+    private JLabel previewLabel;
 
-    private JLabel fontPriviewLabel;
-
-    private JButton btnOK;
-    private JButton btnCancel;
+    private JButton okBtn;
+    private JButton cancelBtn;
 
     public MenuFontDesign(JavaMemoDesign parentFrame) {
         super(parentFrame, "글꼴", true);
 
-        MenuFontEvent fontEvent = new MenuFontEvent(this);
         this.parentFrame = parentFrame;
         setLayout(null);
 
-        addFontKindPanel();
-        addFontStylePanel();
-        addFontSizePanel();
-        addFontPreviewPanel();
-        addFontButtonPanel();
+        addKindPanel();
+        addStylePanel();
+        addSizePanel();
+        addPreviewPanel();
+        addButtonPanel();
 
-        fontKindList.addMouseListener(fontEvent);
-        fontStyleList.addMouseListener(fontEvent);
-        fontSizeList.addMouseListener(fontEvent);
+        addListeners();
 
-        btnOK.addActionListener(fontEvent);
-        btnCancel.addActionListener(fontEvent);
-        setFont(new Font(DEFAULT_FONT_KIND, DEFAULT_FONT_STYLE, 12));
-        UIManager.getLookAndFeelDefaults().put("defaultFont", new Font(DEFAULT_FONT_KIND, DEFAULT_FONT_STYLE, 12));
-        setSize(560, 470);
+        setBounds(parentFrame.getX() + 25, parentFrame.getY() + 65, 550, 470);
         setVisible(true);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
@@ -69,140 +56,154 @@ public class MenuFontDesign extends JDialog {
         return parentFrame;
     }
 
-    public JTextField getFontKindField() {
-        return fontKindField;
+    public JTextField getKindField() {
+        return kindField;
     }
 
-    public JTextField getFontStyleField() {
-        return fontStyleField;
+    public JTextField getStyleField() {
+        return styleField;
     }
 
-    public JTextField getFontSizeField() {
-        return fontSizeField;
+    public JTextField getSizeField() {
+        return sizeField;
     }
 
-    public JList<String> getFontKindList() {
-        return fontKindList;
+    public JList<String> getKindList() {
+        return kindList;
     }
 
-    public JList<String> getFontStyleList() {
-        return fontStyleList;
+    public JList<String> getStyleList() {
+        return styleList;
     }
 
-    public JList<String> getFontSizeList() {
-        return fontSizeList;
+    public JList<String> getSizeList() {
+        return sizeList;
     }
 
-    public DefaultListModel<String> getFontKindModel() {
-        return fontKindModel;
+    public JLabel getPreviewLabel() {
+        return previewLabel;
     }
 
-    public DefaultListModel<String> getFontStyleModel() {
-        return fontStyleModel;
+    private void addKindPanel() {
+        JLabel kindLabel = new JLabel("글꼴");
+        kindField = new JTextField(DEFAULT_FONT_KIND);
+
+        DefaultListModel<String> kindModel = new DefaultListModel<>();
+        kindList = new JList<>(kindModel);
+        JScrollPane kindScroll = new JScrollPane(kindList);
+        kindModel.addElement("고딕체");
+        kindModel.addElement("궁서체");
+        kindModel.addElement("Consolas");
+        kindModel.addElement("새굴림");
+        kindModel.addElement("맑은 고딕");
+
+        kindLabel.setBounds(0, 0, 200, 30);
+        kindField.setBounds(0, 30, 200, 30);
+        kindScroll.setBounds(0, 60, 200, 120);
+
+        JPanel kindPanel = new JPanel();
+        kindPanel.setLayout(null);
+
+        kindPanel.add(kindLabel);
+        kindPanel.add(kindField);
+        kindPanel.add(kindScroll);
+
+        kindPanel.setBounds(20, 10, 200, 200);
+        add(kindPanel);
     }
 
-    public DefaultListModel<String> getFontSizeModel() {
-        return fontSizeModel;
+    private void addStylePanel() {
+        JLabel styleLabel = new JLabel("글꼴 스타일");
+        styleField = new JTextField(DEFAULT_FONT_STYLE_STRING);
+
+        DefaultListModel<String> styleModel = new DefaultListModel<>();
+        styleList = new JList<>(styleModel);
+        JScrollPane styleScroll = new JScrollPane(styleList);
+        styleModel.addElement("일반");
+        styleModel.addElement("굵게");
+        styleModel.addElement("기울임꼴");
+        styleModel.addElement("굵은 기울임꼴");
+
+        styleLabel.setBounds(0, 0, 170, 30);
+        styleField.setBounds(0, 30, 170, 30);
+        styleScroll.setBounds(0, 60, 170, 120);
+
+        JPanel stylePanel = new JPanel();
+        stylePanel.setLayout(null);
+
+        stylePanel.add(styleLabel);
+        stylePanel.add(styleField);
+        stylePanel.add(styleScroll);
+
+        stylePanel.setBounds(240, 10, 170, 200);
+        add(stylePanel);
     }
 
-    public JLabel getFontPriviewLabel() {
-        return fontPriviewLabel;
-    }
+    private void addSizePanel() {
+        JLabel sizeLabel = new JLabel("크기");
+        sizeField = new JTextField(Integer.toString(DEFAULT_FONT_SIZE));
 
-    private void addFontKindPanel() {
-        JPanel fontKindPanel = new JPanel();
-        fontKindPanel.setLayout(null);
-        JLabel fontKindLabel = new JLabel("글꼴");
-        fontKindField = new JTextField(DEFAULT_FONT_KIND, 10);
-        fontKindModel = new DefaultListModel<>();
-        fontKindList = new JList<>(fontKindModel);
-        JScrollPane fontKindScroll = new JScrollPane(fontKindList);
-        fontKindModel.addElement("고딕체");
-        fontKindModel.addElement("궁서체");
-        fontKindModel.addElement("Consolas");
-        fontKindModel.addElement("새굴림");
-        fontKindModel.addElement("맑은 고딕");
-
-        fontKindLabel.setBounds(0, 0, 200, 30);
-        fontKindField.setBounds(0, 30, 200, 30);
-        fontKindScroll.setBounds(0, 60, 200, 120);
-        fontKindPanel.add(fontKindLabel);
-        fontKindPanel.add(fontKindField);
-        fontKindPanel.add(fontKindScroll);
-
-        fontKindPanel.setBounds(20, 10, 200, 200);
-        add(fontKindPanel);
-    }
-
-    private void addFontStylePanel() {
-        JPanel fontStylePanel = new JPanel();
-        fontStylePanel.setLayout(null);
-        JLabel fontStyleLabel = new JLabel("글꼴 스타일");
-        fontStyleField = new JTextField(Integer.toString(DEFAULT_FONT_STYLE), 10);
-        fontStyleModel = new DefaultListModel<>();
-        fontStyleList = new JList<>(fontStyleModel);
-        JScrollPane fontStyleScroll = new JScrollPane(fontStyleList);
-        fontStyleModel.addElement("일반");
-        fontStyleModel.addElement("굵게");
-        fontStyleModel.addElement("기울임꼴");
-        fontStyleModel.addElement("굵은 기울임꼴");
-
-        fontStyleLabel.setBounds(0, 0, 130, 30);
-        fontStyleField.setBounds(0, 30, 130, 30);
-        fontStyleScroll.setBounds(0, 60, 130, 120);
-        fontStylePanel.add(fontStyleLabel);
-        fontStylePanel.add(fontStyleField);
-        fontStylePanel.add(fontStyleScroll);
-
-        fontStylePanel.setBounds(240, 10, 130, 200);
-        add(fontStylePanel);
-    }
-
-    private void addFontSizePanel() {
-        JPanel fontSizePanel = new JPanel();
-        fontSizePanel.setLayout(null);
-        JLabel fontSizeLabel = new JLabel("크기");
-        fontSizeField = new JTextField(Integer.toString(DEFAULT_FONT_SIZE), 10);
-        fontSizeModel = new DefaultListModel<>();
-        fontSizeList = new JList<>(fontSizeModel);
-        JScrollPane fontSizeScroll = new JScrollPane(fontSizeList);
-        fontSizeModel.addElement("8");
-        fontSizeModel.addElement("9");
+        DefaultListModel<String> sizeModel = new DefaultListModel<>();
+        sizeList = new JList<>(sizeModel);
+        JScrollPane sizeScroll = new JScrollPane(sizeList);
+        sizeModel.addElement("8");
+        sizeModel.addElement("9");
         for (int i = 10; i < 81; i += 2) {
-            fontSizeModel.addElement(Integer.toString(i));
+            sizeModel.addElement(Integer.toString(i));
         }
 
-        fontSizeLabel.setBounds(0, 0, 130, 30);
-        fontSizeField.setBounds(0, 30, 130, 30);
-        fontSizeScroll.setBounds(0, 60, 130, 120);
-        fontSizePanel.add(fontSizeLabel);
-        fontSizePanel.add(fontSizeField);
-        fontSizePanel.add(fontSizeScroll);
+        sizeLabel.setBounds(0, 0, 80, 30);
+        sizeField.setBounds(0, 30, 80, 30);
+        sizeScroll.setBounds(0, 60, 80, 120);
 
-        fontSizePanel.setBounds(390, 10, 130, 200);
-        add(fontSizePanel);
+        JPanel sizePanel = new JPanel();
+        sizePanel.setLayout(null);
+
+        sizePanel.add(sizeLabel);
+        sizePanel.add(sizeField);
+        sizePanel.add(sizeScroll);
+
+        sizePanel.setBounds(430, 10, 80, 200);
+        add(sizePanel);
     }
 
-    private void addFontPreviewPanel() {
-        JPanel fontPrivewPanel = new JPanel();
-        fontPrivewPanel.setLayout(null);
-        fontPriviewLabel = new JLabel("AabbYyZz");
-        fontPriviewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 33));
-        fontPriviewLabel.setBounds(45, 20, 180, 100);
-        fontPrivewPanel.add(fontPriviewLabel);
-        fontPrivewPanel.setBounds(240, 210, 280, 140);
-        fontPrivewPanel.setBorder(new TitledBorder("보기"));
-        add(fontPrivewPanel);
+    private void addPreviewPanel() {
+        previewLabel = new JLabel("AabbYyZz");
+        previewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 33));
+        previewLabel.setBounds(45, 20, 180, 100);
+
+        JPanel previewPanel = new JPanel();
+        previewPanel.setLayout(null);
+        previewPanel.add(previewLabel);
+
+        previewPanel.setBounds(240, 210, 270, 140);
+        previewPanel.setBorder(new TitledBorder("보기"));
+
+        add(previewPanel);
     }
 
-    private void addFontButtonPanel() {
-        JPanel fontButtonPanel = new JPanel();
-        fontButtonPanel.setLayout(new GridLayout(1, 2));
-        btnOK = new JButton("확인");
-        btnCancel = new JButton("취소");
-        fontButtonPanel.add(btnOK);
-        fontButtonPanel.add(btnCancel);
-        fontButtonPanel.setBounds(320, 370, 200, 40);
-        add(fontButtonPanel);
+    private void addButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2));
+        okBtn = new JButton("확인");
+        cancelBtn = new JButton("취소");
+
+        buttonPanel.add(okBtn);
+        buttonPanel.add(cancelBtn);
+
+        buttonPanel.setBounds(320, 370, 190, 40);
+
+        add(buttonPanel);
+    }
+
+    private void addListeners() {
+        MenuFontEvent fontEvent = new MenuFontEvent(this);
+
+        kindList.addMouseListener(fontEvent);
+        styleList.addMouseListener(fontEvent);
+        sizeList.addMouseListener(fontEvent);
+
+        okBtn.addActionListener(fontEvent);
+        cancelBtn.addActionListener(fontEvent);
     }
 }

@@ -13,6 +13,20 @@ public class JavaMemoDesign extends JFrame {
     public JavaMemoDesign() {
         super("메모장");
 
+        addMenuComponents();
+        addTextArea();
+
+        setSize(600, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public JTextArea getMemoArea() {
+        return memoArea;
+    }
+
+    public void addMenuComponents() {
         JavaMemoEvent memoEvent = new JavaMemoEvent(this);
         JMenuBar menuBar = new JMenuBar();
 
@@ -52,17 +66,11 @@ public class JavaMemoDesign extends JFrame {
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
+    }
 
+    public void addTextArea() {
         memoArea = new JTextArea();
         JScrollPane memoScroll = new JScrollPane(memoArea);
         add(memoScroll);
-
-        setSize(300, 300);
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    public JTextArea getMemoArea() {
-        return memoArea;
     }
 }
