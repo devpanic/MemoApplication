@@ -50,7 +50,8 @@ public class MenuFontEvent extends WindowAdapter implements ActionListener, Mous
 
         if (eventSource == kindList) {
             applyFieldContent(fontDesign.getKindField(), kindList.getSelectedValue());
-            applyPreviewFont(tempStr, MenuFontDesign.DEFAULT_FONT_STYLE, MenuFontDesign.DEFAULT_FONT_SIZE);
+            applyPreviewFont(kindList.getSelectedValue(), MenuFontDesign.DEFAULT_FONT_STYLE,
+                    MenuFontDesign.DEFAULT_FONT_SIZE);
         } else if (eventSource == styleList) {
             applyFieldContent(fontDesign.getStyleField(), styleList.getSelectedValue());
             tempInt = checkFontStyle(styleList.getSelectedValue());
@@ -58,7 +59,7 @@ public class MenuFontEvent extends WindowAdapter implements ActionListener, Mous
         } else if (eventSource == sizeList) {
             applyFieldContent(fontDesign.getSizeField(), sizeList.getSelectedValue());
             applyPreviewFont(MenuFontDesign.DEFAULT_FONT_KIND, MenuFontDesign.DEFAULT_FONT_STYLE,
-                    Integer.parseInt(tempStr));
+                    Integer.parseInt(sizeList.getSelectedValue()));
         }
     }
 

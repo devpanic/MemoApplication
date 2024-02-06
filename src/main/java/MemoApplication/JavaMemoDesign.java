@@ -90,9 +90,9 @@ public class JavaMemoDesign extends JFrame {
             try {
                 FileReader fReader = new FileReader(fontConfig);
                 BufferedReader bufReader = new BufferedReader(fReader);
-                String[] fontInfo = bufReader.readLine().split(" ");
 
-                return new Font(fontInfo[0], Integer.parseInt(fontInfo[1]), Integer.parseInt(fontInfo[2]));
+                return new Font(bufReader.readLine(), Integer.parseInt(bufReader.readLine()),
+                        Integer.parseInt(bufReader.readLine()));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {

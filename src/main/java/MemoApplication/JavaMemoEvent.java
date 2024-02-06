@@ -51,29 +51,15 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         File tempFile = new File(getFilePath());
         if (tempFile.exists()) {
             try {
-                FileReader fReader = new FileReader(tempFile);
-                BufferedReader bufReader = new BufferedReader(fReader);
-
-                String str = "";
-                StringBuilder strBuilder = new StringBuilder();
-
-                while ((str = bufReader.readLine()) != null) {
-                    strBuilder.append(str + "\n");
-                }
-
-                if (!strBuilder.substring(0, strBuilder.length() - 1).equals(javaMemoDesign.getMemoArea().getText())) {
-                    if (JOptionPane.showConfirmDialog(null, "파일을 저장하시겠습니까?") == JOptionPane.OK_OPTION) {
-                        savePostDialog();
-                    }
-                }
+                checkModified(tempFile);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            if (javaMemoDesign.getMemoArea().getText().length() != 0) {
-                savePostDialog();
+            if (isTextAreaEmpty()) {
+                checkSave();
             }
         }
         javaMemoDesign.getMemoArea().setText("");
@@ -85,30 +71,14 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
 
         if (tempFile.exists()) {
             try {
-                FileReader fReader = new FileReader(tempFile);
-                BufferedReader bufReader = new BufferedReader(fReader);
-
-                String str = "";
-                StringBuilder strBuilder = new StringBuilder();
-
-                while ((str = bufReader.readLine()) != null) {
-                    strBuilder.append(str + "\n");
-                }
-
-                if (!strBuilder.substring(0, strBuilder.length() - 1).equals(javaMemoDesign.getMemoArea().getText())) {
-                    if (JOptionPane.showConfirmDialog(null, "파일을 저장하시겠습니까?") == JOptionPane.OK_OPTION) {
-                        savePostDialog();
-                    }
-                }
-                fReader.close();
-                bufReader.close();
+                checkModified(tempFile);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            if (javaMemoDesign.getMemoArea().getText().length() != 0) {
+            if (isTextAreaEmpty()) {
                 savePostDialog();
             }
         }
@@ -118,25 +88,52 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         File newFile = new File(fdOpen.getDirectory() + fdOpen.getFile());
 
         try {
-            FileReader fReader = new FileReader(newFile);
-            BufferedReader bufReader = new BufferedReader(fReader);
-
-            String str = "";
-            StringBuilder strBuilder = new StringBuilder();
-
-            while ((str = bufReader.readLine()) != null) {
-                strBuilder.append(str);
-            }
+            StringBuilder strBuilder = loadFileContent(newFile);
 
             javaMemoDesign.setTitle(newFile.getCanonicalPath());
             javaMemoDesign.getMemoArea().setText(strBuilder.toString());
-
-            fReader.close();
-            bufReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         setFrameTitle(fdOpen, "열기");
+    }
+
+    public StringBuilder loadFileContent(File tempFile) throws FileNotFoundException, IOException {
+        FileReader fReader = new FileReader(tempFile);
+        BufferedReader bufReader = new BufferedReader(fReader);
+
+        String str = "";
+        StringBuilder strBuilder = new StringBuilder();
+
+        while ((str = bufReader.readLine()) != null) {
+            strBuilder.append(str + "\n");
+        }
+
+        fReader.close();
+        bufReader.close();
+
+        return strBuilder;
+    }
+
+    public void checkModified(File tempFile) throws FileNotFoundException, IOException {
+        StringBuilder strBuilder = loadFileContent(tempFile);
+
+        if (strBuilder.length() > 0) {
+            if (!strBuilder.substring(0, strBuilder.length() - 1)
+                    .equals(javaMemoDesign.getMemoArea().getText())) {
+                checkSave();
+            }
+        }
+    }
+
+    public boolean isTextAreaEmpty() {
+        return javaMemoDesign.getMemoArea().getText().length() != 0;
+    }
+
+    public void checkSave() {
+        if (JOptionPane.showConfirmDialog(null, "파일을 저장하시겠습니까?") == JOptionPane.OK_OPTION) {
+            savePostDialog();
+        }
     }
 
     public String getFilePath() {
@@ -169,13 +166,15 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         FileDialog fdOpen = new FileDialog(javaMemoDesign, "저장", FileDialog.SAVE);
         fdOpen.setVisible(true);
 
-        File newFile = new File(fdOpen.getDirectory() + fdOpen.getFile());
-        try {
-            FileWriter fWriter = new FileWriter(newFile);
-            fWriter.write(javaMemoDesign.getMemoArea().getText());
-            fWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (fdOpen.getFile() != null) {
+            File newFile = new File(fdOpen.getDirectory() + fdOpen.getFile());
+            try {
+                FileWriter fWriter = new FileWriter(newFile);
+                fWriter.write(javaMemoDesign.getMemoArea().getText());
+                fWriter.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         setFrameTitle(fdOpen, "저장");
@@ -199,9 +198,9 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         Font tempFont = javaMemoDesign.getMemoArea().getFont();
         try {
             FileWriter fWriter = new FileWriter(fontInfo);
-            fWriter.write(tempFont.getFontName() + " ");
-            fWriter.write(tempFont.getStyle() + " ");
-            fWriter.write(tempFont.getSize() + " ");
+            fWriter.write(tempFont.getFontName() + "\n");
+            fWriter.write(tempFont.getStyle() + "\n");
+            fWriter.write(tempFont.getSize() + "\n");
             fWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
