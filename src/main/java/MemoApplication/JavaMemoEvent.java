@@ -4,6 +4,12 @@ import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     private JavaMemoDesign javaMemoDesign;
@@ -40,7 +46,35 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     }
 
     public void newPost() {
+        File tempFile = new File(javaMemoDesign.getTitle());
+        if (tempFile.exists()) {    // 열려있는 상태
+            // 두 파일 내용 비교
+            try {
+                FileReader fileReader = new FileReader(tempFile);
+                BufferedReader bufReader = new BufferedReader(fileReader);
+                String str = "";
+                StringBuilder strBuilder = new StringBuilder();
+
+                while ((str = bufReader.readLine()) != null) {
+                    strBuilder.append(str);
+                }
+
+                if (!strBuilder.equals(javaMemoDesign.getMemoArea().getText())) {
+                    savePost();
+                }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else { // 새로운 글인 경우
+            if (javaMemoDesign.getMemoArea().getText().length() != 0) {
+                // 새로운 파일에 저장
+                savePost();
+            }
+        }
         javaMemoDesign.getMemoArea().setText("");
+        javaMemoDesign.setTitle("메모장-새글");
     }
 
     public void openPost() {
@@ -54,11 +88,21 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         FileDialog fdOpen = new FileDialog(javaMemoDesign, "저장", FileDialog.SAVE);
         fdOpen.setVisible(true);
 
+        File newFile = new File(fdOpen.getDirectory() + fdOpen.getFile());
+
+        try {
+            FileWriter fWriter = new FileWriter(newFile);
+            fWriter.write(javaMemoDesign.getMemoArea().getText());
+            fWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         setFrameTitle(fdOpen, "저장");
     }
 
     public void saveWithOtherName() {
-        
+
     }
 
     public void setFrameTitle(FileDialog fdOpen, String mode) {
