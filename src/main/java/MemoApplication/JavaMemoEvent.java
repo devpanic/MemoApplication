@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 
 public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     private JavaMemoDesign javaMemoDesign;
@@ -31,7 +32,7 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
                 savePost();
                 break;
             case "다른 이름으로 저장":
-                saveWithOtherName();
+                savePostDialog();
                 break;
             case "종료":
                 exitProgram();
@@ -46,31 +47,32 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     }
 
     public void newPost() {
-        File tempFile = new File(javaMemoDesign.getTitle());
-        if (tempFile.exists()) {    // 열려있는 상태
-            // 두 파일 내용 비교
+        File tempFile = new File(getFilePath());
+        if (tempFile.exists()) {
             try {
-                FileReader fileReader = new FileReader(tempFile);
-                BufferedReader bufReader = new BufferedReader(fileReader);
+                FileReader fReader = new FileReader(tempFile);
+                BufferedReader bufReader = new BufferedReader(fReader);
+
                 String str = "";
                 StringBuilder strBuilder = new StringBuilder();
 
                 while ((str = bufReader.readLine()) != null) {
-                    strBuilder.append(str);
+                    strBuilder.append(str + "\n");
                 }
 
-                if (!strBuilder.equals(javaMemoDesign.getMemoArea().getText())) {
-                    savePost();
+                if (!strBuilder.substring(0, strBuilder.length() - 1).equals(javaMemoDesign.getMemoArea().getText())) {
+                    if (JOptionPane.showConfirmDialog(null, "파일을 저장하시겠습니까?") == JOptionPane.OK_OPTION) {
+                        savePostDialog();
+                    }
                 }
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } else { // 새로운 글인 경우
+        } else {
             if (javaMemoDesign.getMemoArea().getText().length() != 0) {
-                // 새로운 파일에 저장
-                savePost();
+                savePostDialog();
             }
         }
         javaMemoDesign.getMemoArea().setText("");
@@ -78,18 +80,95 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     }
 
     public void openPost() {
-        FileDialog fdOpen = new FileDialog(javaMemoDesign, "열기", FileDialog.LOAD);
+        File tempFile = new File(getFilePath());
 
+        if (tempFile.exists()) {
+            try {
+                FileReader fReader = new FileReader(tempFile);
+                BufferedReader bufReader = new BufferedReader(fReader);
+
+                String str = "";
+                StringBuilder strBuilder = new StringBuilder();
+
+                while ((str = bufReader.readLine()) != null) {
+                    strBuilder.append(str + "\n");
+                }
+
+                if (!strBuilder.substring(0, strBuilder.length() - 1).equals(javaMemoDesign.getMemoArea().getText())) {
+                    if (JOptionPane.showConfirmDialog(null, "파일을 저장하시겠습니까?") == JOptionPane.OK_OPTION) {
+                        savePostDialog();
+                    }
+                }
+                fReader.close();
+                bufReader.close();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            if (javaMemoDesign.getMemoArea().getText().length() != 0) {
+                savePostDialog();
+            }
+        }
+
+        FileDialog fdOpen = new FileDialog(javaMemoDesign, "열기", FileDialog.LOAD);
         fdOpen.setVisible(true);
+        File newFile = new File(fdOpen.getDirectory() + fdOpen.getFile());
+
+        try {
+            FileReader fReader = new FileReader(newFile);
+            BufferedReader bufReader = new BufferedReader(fReader);
+
+            String str = "";
+            StringBuilder strBuilder = new StringBuilder();
+
+            while ((str = bufReader.readLine()) != null) {
+                strBuilder.append(str);
+            }
+
+            javaMemoDesign.setTitle(newFile.getCanonicalPath());
+            javaMemoDesign.getMemoArea().setText(strBuilder.toString());
+
+            fReader.close();
+            bufReader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         setFrameTitle(fdOpen, "열기");
     }
 
+    public String getFilePath() {
+        String[] title = javaMemoDesign.getTitle().split(" ");
+
+        if (title.length == 1) {
+            return "";
+        }
+
+        return title[1];
+    }
+
     public void savePost() {
+        File tempFile = new File(getFilePath());
+
+        if (tempFile.exists()) {
+            try {
+                FileWriter fWriter = new FileWriter(tempFile);
+                fWriter.write(javaMemoDesign.getMemoArea().getText());
+                fWriter.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            savePostDialog();
+        }
+    }
+
+    public void savePostDialog() {
         FileDialog fdOpen = new FileDialog(javaMemoDesign, "저장", FileDialog.SAVE);
         fdOpen.setVisible(true);
 
         File newFile = new File(fdOpen.getDirectory() + fdOpen.getFile());
-
         try {
             FileWriter fWriter = new FileWriter(newFile);
             fWriter.write(javaMemoDesign.getMemoArea().getText());
@@ -101,10 +180,6 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         setFrameTitle(fdOpen, "저장");
     }
 
-    public void saveWithOtherName() {
-
-    }
-
     public void setFrameTitle(FileDialog fdOpen, String mode) {
         StringBuilder strBuilder = new StringBuilder();
 
@@ -114,7 +189,7 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
             return;
         }
 
-        strBuilder.append(mode).append(" ").append(path).append("/").append(fdOpen.getFile());
+        strBuilder.append(mode).append(" ").append(path).append(fdOpen.getFile());
         javaMemoDesign.setTitle(strBuilder.toString());
     }
 
