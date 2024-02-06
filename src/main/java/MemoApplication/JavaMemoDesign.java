@@ -38,6 +38,7 @@ public class JavaMemoDesign extends JFrame {
         JMenuItem openMemoItem = new JMenuItem("열기");
         JMenuItem saveMemoItem = new JMenuItem("저장");
         JMenuItem exitMemoItem = new JMenuItem("종료");
+        JMenuItem saveOtherNameMemoItem = new JMenuItem("다른 이름으로 저장");
 
         JMenuItem fontItem = new JMenuItem("글꼴");
 
@@ -47,6 +48,7 @@ public class JavaMemoDesign extends JFrame {
         openMemoItem.addActionListener(memoEvent);
         saveMemoItem.addActionListener(memoEvent);
         exitMemoItem.addActionListener(memoEvent);
+        saveOtherNameMemoItem.addActionListener(memoEvent);
         fontItem.addActionListener(memoEvent);
         memoInfoItem.addActionListener(memoEvent);
 
@@ -54,6 +56,7 @@ public class JavaMemoDesign extends JFrame {
         fileMenu.addSeparator();
         fileMenu.add(openMemoItem);
         fileMenu.add(saveMemoItem);
+        fileMenu.add(saveOtherNameMemoItem);
         fileMenu.addSeparator();
         fileMenu.add(exitMemoItem);
 

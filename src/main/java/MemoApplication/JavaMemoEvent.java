@@ -24,6 +24,9 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
             case "저장":
                 savePost();
                 break;
+            case "다른 이름으로 저장":
+                saveWithOtherName();
+                break;
             case "종료":
                 exitProgram();
                 break;
@@ -52,6 +55,10 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
         fdOpen.setVisible(true);
 
         setFrameTitle(fdOpen, "저장");
+    }
+
+    public void saveWithOtherName() {
+        
     }
 
     public void setFrameTitle(FileDialog fdOpen, String mode) {
