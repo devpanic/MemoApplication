@@ -1,6 +1,7 @@
 package MemoApplication;
 
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -194,6 +195,17 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     }
 
     public void exitProgram() {
+        File fontInfo = new File("./font.txt");
+        Font tempFont = javaMemoDesign.getMemoArea().getFont();
+        try {
+            FileWriter fWriter = new FileWriter(fontInfo);
+            fWriter.write(tempFont.getFontName() + " ");
+            fWriter.write(tempFont.getStyle() + " ");
+            fWriter.write(tempFont.getSize() + " ");
+            fWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         javaMemoDesign.dispose();
     }
 

@@ -1,5 +1,11 @@
 package MemoApplication;
 
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -73,7 +79,26 @@ public class JavaMemoDesign extends JFrame {
 
     public void addTextArea() {
         memoArea = new JTextArea();
+        memoArea.setFont(createFontInfo());
         JScrollPane memoScroll = new JScrollPane(memoArea);
         add(memoScroll);
+    }
+
+    public Font createFontInfo() {
+        File fontConfig = new File("./font.txt");
+        if (fontConfig.exists()) {
+            try {
+                FileReader fReader = new FileReader(fontConfig);
+                BufferedReader bufReader = new BufferedReader(fReader);
+                String[] fontInfo = bufReader.readLine().split(" ");
+
+                return new Font(fontInfo[0], Integer.parseInt(fontInfo[1]), Integer.parseInt(fontInfo[2]));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return new Font("맑은 고딕", Font.BOLD, 16);
     }
 }
