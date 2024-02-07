@@ -1,11 +1,7 @@
 package MemoApplication;
 
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -85,20 +81,29 @@ public class JavaMemoDesign extends JFrame {
     }
 
     public Font createFontInfo() {
-        File fontConfig = new File("./font.txt");
-        if (fontConfig.exists()) {
-            try {
-                FileReader fReader = new FileReader(fontConfig);
-                BufferedReader bufReader = new BufferedReader(fReader);
+        ObjectInputStream fontInputStream = null;
+        File fontConfigFile = new File("./font.txt");
 
-                return new Font(bufReader.readLine(), Integer.parseInt(bufReader.readLine()),
-                        Integer.parseInt(bufReader.readLine()));
+        if(fontConfigFile.exists()){
+            Font fontConfig = null;
+
+            try{
+                fontInputStream = new ObjectInputStream(new FileInputStream("./font.txt"));
+                fontConfig = (Font)fontInputStream.readObject();
+
+                if(fontInputStream != null){
+                    fontInputStream.close();
+                }
+                return fontConfig;
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
+
         return new Font("맑은 고딕", Font.BOLD, 16);
     }
 }

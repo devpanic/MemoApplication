@@ -5,12 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import javax.swing.JOptionPane;
 
 public class JavaMemoEvent extends WindowAdapter implements ActionListener {
@@ -194,17 +189,31 @@ public class JavaMemoEvent extends WindowAdapter implements ActionListener {
     }
 
     public void exitProgram() {
-        File fontInfo = new File("./font.txt");
-        Font tempFont = javaMemoDesign.getMemoArea().getFont();
-        try {
-            FileWriter fWriter = new FileWriter(fontInfo);
-            fWriter.write(tempFont.getFontName() + "\n");
-            fWriter.write(tempFont.getStyle() + "\n");
-            fWriter.write(tempFont.getSize() + "\n");
-            fWriter.close();
+        ObjectOutputStream fontOutputStream = null;
+        try{
+            fontOutputStream = new ObjectOutputStream(new FileOutputStream("./font.txt"));
+            fontOutputStream.writeObject(javaMemoDesign.getMemoArea().getFont());
+            fontOutputStream.flush();
+
+            if(fontOutputStream != null){
+                fontOutputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+//        File fontInfo = new File("./font.txt");
+//        Font tempFont = javaMemoDesign.getMemoArea().getFont();
+//        try {
+//            FileWriter fWriter = new FileWriter(fontInfo);
+//            fWriter.write(tempFont.getFontName() + "\n");
+//            fWriter.write(tempFont.getStyle() + "\n");
+//            fWriter.write(tempFont.getSize() + "\n");
+//            fWriter.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         javaMemoDesign.dispose();
     }
 
